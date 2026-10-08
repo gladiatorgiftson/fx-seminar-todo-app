@@ -1,0 +1,54 @@
+# Variant for a host where Traefik already owns ports 80 and 443 (the shared
+# develop stack). Nothing here publishes a port: Traefik routes
+# todo.giftson.org to the "lab-web" container over the existing Docker network
+# and gets the certificate itself.
+#
+#   docker compose -f compose.traefik.yml up -d --build
+#
+name: fxec-lab
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: todo
+      POSTGRES_USER: todo
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/todo
+      DB_USER: todo
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # Same Caddy image, but listening on plain HTTP inside the network only.
+  # Traefik in front of it does HTTPS.
+  lab-web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.frontend
+    environment:
+      SITE_ADDRESS: ":80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - default
+      - edge
+
+volumes:
+  pgdata:
+
+networks:
+  edge:
+    external: true
+    name: ${EDGE_NETWORK:-cyrino-develop_default}

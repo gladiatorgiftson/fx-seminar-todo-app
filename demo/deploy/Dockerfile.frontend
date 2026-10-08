@@ -1,0 +1,13 @@
+# Stage 1: build the static files
+FROM node:24-alpine AS build
+WORKDIR /app
+RUN corepack enable
+COPY frontend/package.json frontend/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY frontend .
+RUN pnpm build
+
+# Stage 2: Caddy serves the files and forwards /api to the back end, with free HTTPS
+FROM caddy:2-alpine
+COPY deploy/Caddyfile /etc/caddy/Caddyfile
+COPY --from=build /app/dist /srv

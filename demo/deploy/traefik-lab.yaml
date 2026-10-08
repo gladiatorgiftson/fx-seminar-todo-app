@@ -1,0 +1,16 @@
+# One extra route for the shared Traefik: todo.giftson.org -> the lab's web
+# container. Drop this file into Traefik's dynamic directory; it is picked up
+# without a restart. Everything else about the develop stack stays untouched.
+http:
+  routers:
+    fxec-lab:
+      rule: Host(`todo.giftson.org`)
+      entryPoints: [websecure]
+      service: fxec-lab
+      tls:
+        certResolver: letsencrypt
+  services:
+    fxec-lab:
+      loadBalancer:
+        servers:
+          - url: http://fxec-lab-lab-web-1:80

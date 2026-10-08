@@ -1,0 +1,14 @@
+# Replace with your real domain. Caddy gets the HTTPS certificate automatically.
+{$SITE_ADDRESS}
+
+root * /srv
+encode gzip
+
+# API calls go to Spring Boot. Everything else is the React app.
+handle /api/* {
+	reverse_proxy backend:8080
+}
+handle {
+	try_files {path} /index.html
+	file_server
+}
