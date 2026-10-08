@@ -9,6 +9,8 @@ http:
       service: fxec-lab
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: todo.giftson.org
   services:
     fxec-lab:
       loadBalancer:
