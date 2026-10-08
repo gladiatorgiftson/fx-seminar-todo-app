@@ -23,6 +23,8 @@ body {
 
 .box {
   width: min(440px, 100%);
+  max-height: calc(100vh - 48px);        /* never taller than the window */
+  display: flex; flex-direction: column;  /* so the list below can scroll on its own */
   margin: 24px;
   padding: 28px 28px 24px;
   background: var(--card);
@@ -65,7 +67,11 @@ button.link {
   text-decoration: underline; text-underline-offset: 3px;
 }
 
-ul { list-style: none; padding: 0; margin: 18px 0 0; }
+ul {
+  list-style: none; padding: 0; margin: 18px 0 0;
+  overflow-y: auto; min-height: 0;        /* the list scrolls, the header and form stay put */
+  scrollbar-width: thin;
+}
 li {
   display: flex; justify-content: space-between; align-items: center; gap: 12px;
   padding: 11px 0; border-top: 1px solid var(--line);
@@ -89,5 +95,5 @@ li:hover button.link { color: var(--danger); }
 
 @media (max-width: 480px) {
   body { place-items: start; }
-  .box { margin: 0; min-height: 100vh; border: 0; border-radius: 0; padding: 24px 18px; }
+  .box { margin: 0; min-height: 100vh; max-height: 100vh; border: 0; border-radius: 0; padding: 24px 18px; }
 }
