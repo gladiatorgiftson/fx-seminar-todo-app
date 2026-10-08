@@ -1050,7 +1050,7 @@ Welcome to Ubuntu 24.04 LTS
 root@todo:~$ docker --version
 Docker version 28.x
 
-root@todo:~$ git clone <our repo> todo
+root@todo:~$ git clone https://github.com/gladiatorgiftson/fx-seminar-todo-app.git todo
 root@todo:~$ cd todo/demo/deploy
 root@todo:~$ cp .env.example .env   # fill in the domain
 root@todo:~$ docker compose up -d --build
@@ -1483,7 +1483,7 @@ Then break it, read the error, and fix it. Do that enough times and you are not 
   </div>
   <div class="small">
     <div>giftson2310@gmail.com</div>
-    <div class="dim">Today's code: github.com/&lt;your-handle&gt;/fxec-fullstack</div>
+    <div class="dim">Today's code: github.com/gladiatorgiftson/fx-seminar-todo-app</div>
   </div>
 </div>
 

@@ -25,15 +25,34 @@ in my job" and "Working with AI, honestly": they are the two best of the cut.
 If laptops do appear, the "Laptops open" notes below still apply; budget 35
 minutes for the build and drop the career slides to the homework line.
 
-## The day before
+## The day before (done once; here is what was set up)
 
-1. On the Hetzner server (Ubuntu): `apt install docker.io docker-compose-v2 git`, confirm `docker compose version` works.
-2. At your domain registrar, add an **A record**: `todo` → the server's IPv4. Do this a day early so the DNS slide is true when you open it.
-3. Clone this repo on the server, `cp demo/deploy/.env.example demo/deploy/.env`, fill in `SITE_ADDRESS` and a long `DB_PASSWORD`.
-4. `cd demo/deploy && docker compose up -d --build`. First build takes 3 to 5 minutes (Maven downloads). Open `https://todo.giftson.org` and sign up once. Leave it running.
-5. On your laptop: `cd demo/backend && ./mvnw -q package` once, so Maven's cache is warm and the live `spring-boot:run` starts in seconds, not minutes.
-6. `cd demo/frontend && pnpm install` for the same reason.
-7. Check the college Wi-Fi lets you reach `start.spring.io` and `registry.npmjs.org`. If it does not, use your phone's hotspot for the laptop and skip the "download from start.spring.io" moment: unzip the copy in `scratch/` instead.
+The server at `giftson` (65.108.241.19) already runs the shared `cyrino-develop`
+stack, with Traefik on ports 80 and 443. The lab therefore runs **behind that
+Traefik**, from `deploy/compose.traefik.yml`, and publishes no ports of its own.
+
+1. The repo is cloned at `/root/fx-seminar-todo-app` on the server.
+2. `deploy/.env` on the server holds `DB_PASSWORD` (generated) and `EDGE_NETWORK=cyrino-develop_default`.
+3. `deploy/traefik-lab.yaml` was copied into the running Traefik container at
+   `/etc/traefik/dynamic/lab.yaml`. Traefik reloads it live. **If anyone recreates
+   the Traefik container (`docker compose up` in `~/cyrino-develop`), copy it again:**
+   `docker cp deploy/traefik-lab.yaml cyrino-develop-traefik-1:/etc/traefik/dynamic/lab.yaml`
+4. The stack was built and started: `cd /root/fx-seminar-todo-app/demo/deploy && docker compose -f compose.traefik.yml up -d --build`
+5. **DNS, still to do in Cloudflare:** A record `todo` → `65.108.241.19`, DNS only
+   (grey cloud). Traefik fetches the certificate within a minute of the name resolving.
+6. Then open https://todo.giftson.org and sign up once. Check with `nslookup todo.giftson.org` first.
+7. On your laptop: `cd demo/backend && ./mvnw -q package` once, so Maven's cache is warm and the live `spring-boot:run` starts in seconds.
+8. `cd demo/frontend && pnpm install` for the same reason.
+9. Check the college Wi-Fi lets you reach `start.spring.io` and `registry.npmjs.org`. If not, use your phone's hotspot, and skip the "download from start.spring.io" moment.
+
+Useful on the server:
+
+```
+cd /root/fx-seminar-todo-app && git pull
+cd demo/deploy && docker compose -f compose.traefik.yml up -d --build   # redeploy after a change
+docker compose -f compose.traefik.yml logs -f backend                    # watch Spring start
+docker compose -f compose.traefik.yml exec db psql -U todo -c 'select id, name, email from users;'
+```
 
 ## Tools (students, 5 minutes, laptops mode only)
 
@@ -124,10 +143,10 @@ Add the proxy to `vite.config.js`, then `src/api.js`, `src/App.jsx`, `src/AuthFo
 
 ## Step 6: ship it (5 min, if the server was prepared)
 
-On the projector: `ssh` into the server, `cd todo/demo/deploy`, `docker compose ps` (already running), open the site, ask the room to open it on their phones and sign up. Then:
+On the projector: `ssh giftson`, `cd /root/fx-seminar-todo-app/demo/deploy`, `docker compose -f compose.traefik.yml ps` (already running), open the site, ask the room to open it on their phones and sign up. Then:
 
 ```
-docker compose exec db psql -U todo -c 'select id, name, email from users;'
+docker compose -f compose.traefik.yml exec db psql -U todo -c 'select id, name, email from users;'
 ```
 
 Their names appear. That is the moment to go back to the DNS slide and explain how their phones found the server.
@@ -140,5 +159,5 @@ Their names appear. That is the moment to go back to the DNS slide and explain h
 | Port 8080 in use | `./mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8081` and change the Vite proxy. |
 | CORS error in browser | Proxy missing in `vite.config.js`. The finished one is in `demo/frontend`. |
 | 415 from curl | Missing `-H 'Content-Type: application/json'`. Point at it, this is slide "three things that break". |
-| Site not reachable | `docker compose logs web` for Caddy; check the A record with `nslookup todo.giftson.org`. |
+| Site not reachable | `nslookup todo.giftson.org` first; then `docker logs cyrino-develop-traefik-1 --tail 50` and `docker compose -f compose.traefik.yml logs lab-web`. |
 | No internet at all | Run everything locally, skip step 6, show the DNS slide as a story. |
