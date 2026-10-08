@@ -1,18 +1,88 @@
-:root { color-scheme: light; font-family: system-ui, sans-serif; }
-body { margin: 0; background: #f5f3ee; color: #1b1b1b; }
-.box { max-width: 420px; margin: 8vh auto; padding: 24px; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
-h1 { font-size: 1.4rem; margin: 0 0 16px; }
+/* A light, quiet look. Everything is plain CSS on purpose, so you can read it
+   top to bottom: colours, then the page, then each piece. */
+:root {
+  color-scheme: light;
+  --bg: #f6f7f4;
+  --card: #ffffff;
+  --ink: #1d2b25;
+  --muted: #6b7a73;
+  --line: #e3e7e2;
+  --accent: #1f6f5f;
+  --accent-soft: #e6f2ee;
+  --danger: #b3261e;
+  --radius: 14px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.5; }
+
+.box {
+  max-width: 440px;
+  margin: 10vh auto;
+  padding: 28px 28px 24px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+h1 { font-size: 1.35rem; font-weight: 650; margin: 0 0 18px; letter-spacing: -0.01em; }
 header { display: flex; justify-content: space-between; align-items: baseline; }
+.hint { color: var(--muted); font-size: 0.92rem; margin: -10px 0 18px; }
+
 form { display: flex; flex-direction: column; gap: 10px; }
 .row { flex-direction: row; }
 .row input { flex: 1; }
-input { padding: 10px 12px; border: 1px solid #cfcac0; border-radius: 8px; font-size: 1rem; }
-button { padding: 10px 14px; border: 0; border-radius: 8px; background: #1f6f5f; color: #fff; font-size: 1rem; cursor: pointer; }
-button.link { background: none; color: #1f6f5f; padding: 0; text-decoration: underline; }
-ul { list-style: none; padding: 0; margin: 16px 0 0; }
-li { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-top: 1px solid #eee; }
-li label { display: flex; gap: 10px; align-items: center; }
-li.done label { text-decoration: line-through; color: #888; }
-.error { color: #b3261e; margin: 0; }
-.empty { color: #777; }
-.switch { margin-top: 16px; color: #555; }
+
+input[type="text"], input[type="email"], input[type="password"], input:not([type]) {
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--ink);
+}
+input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+input::placeholder { color: #9aa69f; }
+
+button {
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.06); }
+button.link {
+  background: none; color: var(--accent); padding: 0; font-weight: 500;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+
+ul { list-style: none; padding: 0; margin: 18px 0 0; }
+li {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 11px 0; border-top: 1px solid var(--line);
+}
+li label { display: flex; gap: 12px; align-items: center; cursor: pointer; flex: 1; }
+li input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); }
+li.done label { color: var(--muted); text-decoration: line-through; }
+li button.link { color: var(--muted); font-size: 0.9rem; }
+li:hover button.link { color: var(--danger); }
+
+.error {
+  margin: 0; padding: 10px 12px; border-radius: 10px;
+  background: #fdecea; color: var(--danger); font-size: 0.95rem;
+}
+.empty {
+  margin: 18px 0 0; padding: 18px; text-align: center;
+  background: var(--accent-soft); color: var(--accent); border-radius: 10px;
+}
+.switch { margin: 18px 0 0; color: var(--muted); font-size: 0.95rem; }
+.count { color: var(--muted); font-size: 0.9rem; }
+
+@media (max-width: 480px) {
+  .box { margin: 0; min-height: 100vh; border: 0; border-radius: 0; padding: 24px 18px; }
+}

@@ -30,12 +30,17 @@ export function TodoList({ user, onSignOut }) {
     setTodos(todos.filter(t => t.id !== todo.id))
   }
 
+  const left = todos.filter(t => !t.done).length
+
   return (
     <main className="box">
       <header>
         <h1>Hi {user.name}</h1>
         <button className="link" onClick={onSignOut}>Sign out</button>
       </header>
+      <p className="hint">
+        {todos.length === 0 ? 'Your list is empty.' : left === 0 ? 'All done.' : `${left} left to do.`}
+      </p>
 
       <form onSubmit={add} className="row">
         <input placeholder="What needs doing?" value={title} onChange={e => setTitle(e.target.value)} />

@@ -24,6 +24,9 @@ export function AuthForm({ onSignedIn }) {
   return (
     <main className="box">
       <h1>{mode === 'signup' ? 'Create your account' : 'Welcome back'}</h1>
+      <p className="hint">
+        {mode === 'signup' ? 'A name, an email and a password. That is all.' : 'Log in to see your list.'}
+      </p>
       <form onSubmit={submit}>
         {mode === 'signup' && (
           <input name="name" placeholder="Your name" value={form.name} onChange={update} required />
