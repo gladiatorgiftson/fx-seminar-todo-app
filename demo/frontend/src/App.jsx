@@ -1,24 +1,10 @@
-import { useState } from 'react'
-import { AuthForm } from './AuthForm.jsx'
-import { TodoList } from './TodoList.jsx'
-
-// The whole app is one question: do we know who you are?
+// Start here. Right now the app only says hello.
+// Step 5 of demo/STUDENT-GUIDE.md turns this into: form when logged out, list when logged in.
 export function App() {
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('user')
-    return saved ? JSON.parse(saved) : null
-  })
-
-  function signedIn(u) {
-    localStorage.setItem('user', JSON.stringify(u))
-    setUser(u)
-  }
-
-  function signOut() {
-    localStorage.removeItem('user')
-    setUser(null)
-  }
-
-  if (!user) return <AuthForm onSignedIn={signedIn} />
-  return <TodoList user={user} onSignOut={signOut} />
+  return (
+    <main className="box">
+      <h1>My Todos</h1>
+      <p className="hint">The scaffold works. Now go to Step 1 of the guide.</p>
+    </main>
+  )
 }
