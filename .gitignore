@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.slidev/
+*:Zone.Identifier
+# personal, never in the public repo
+GIFT-BRIGHTSON-Resume.md
+# build output and local secrets of the demo
+demo/backend/target/
+demo/frontend/node_modules/
+demo/frontend/dist/
+demo/deploy/.env
