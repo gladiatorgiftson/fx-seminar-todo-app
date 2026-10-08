@@ -1,0 +1,18 @@
+# The lecture deck, as static files, behind the shared Traefik.
+# Build and ship with ../deploy/publish-slides.sh from the laptop.
+name: fxec-slides
+
+services:
+  slides-web:
+    image: caddy:2-alpine
+    volumes:
+      - ./slides/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./slides/dist:/srv:ro
+    restart: unless-stopped
+    networks:
+      - edge
+
+networks:
+  edge:
+    external: true
+    name: ${EDGE_NETWORK:-cyrino-develop_default}

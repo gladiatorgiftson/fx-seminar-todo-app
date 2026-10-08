@@ -1,0 +1,8 @@
+# Serves the built deck (a single-page app) on plain HTTP inside the Docker
+# network. Traefik in front does HTTPS for fx-presentation.giftson.org.
+:80
+
+root * /srv
+encode gzip
+try_files {path} /index.html
+file_server

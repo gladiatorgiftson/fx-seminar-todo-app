@@ -1,0 +1,16 @@
+# Route for the deck: fx-presentation.giftson.org -> the static file container.
+http:
+  routers:
+    fxec-slides:
+      rule: Host(`fx-presentation.giftson.org`)
+      entryPoints: [websecure]
+      service: fxec-slides
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: fx-presentation.giftson.org
+  services:
+    fxec-slides:
+      loadBalancer:
+        servers:
+          - url: http://fxec-slides-slides-web-1:80
